@@ -1,0 +1,278 @@
+/* ===== Team / Quiénes Somos Styles ===== */
+
+.team {
+  background-color: var(--bg-secondary);
+  padding: 6rem 2rem;
+  position: relative;
+}
+
+.team__container {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: 4.5rem;
+  align-items: center;
+}
+
+/* ── Lado Izquierdo: Foto de los dos juntos ── */
+.team__photo-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+.team__photo-frame {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.7);
+  background-color: #141414;
+}
+
+.team__photo-placeholder {
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at center, #222222 0%, #121212 85%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  padding: 2rem;
+  text-align: center;
+  transition: transform var(--transition-slow);
+}
+
+.team__photo-frame:hover .team__photo-placeholder {
+  transform: scale(1.02);
+}
+
+.team__photo-icon {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.5rem;
+}
+
+.team__camera-svg {
+  width: 34px;
+  height: 34px;
+  color: var(--text-secondary);
+}
+
+.team__photo-label {
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-primary);
+}
+
+.team__photo-sublabel {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  letter-spacing: 1px;
+}
+
+/* Efecto decorativo de fondo tras la foto */
+.team__photo-backdrop {
+  position: absolute;
+  top: 18px;
+  left: -18px;
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+  border: 1px dashed rgba(255, 255, 255, 0.15);
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* ── Lado Derecho: Información de Quiénes Somos ── */
+.team__info-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.team__greeting {
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: 2px;
+  color: var(--text-primary);
+  text-transform: uppercase;
+}
+
+.team__role-title {
+  font-family: var(--font-heading);
+  font-size: clamp(1.4rem, 2.5vw, 1.85rem);
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: #f0f0f0;
+  line-height: 1.35;
+  margin-top: -0.3rem;
+}
+
+.team__bio,
+.team__bio-second {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  line-height: 1.8;
+  color: var(--text-secondary);
+  font-weight: 300;
+}
+
+/* Lista de especialidades / Tags */
+.team__specialties {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  padding: 0.8rem 0;
+  font-family: var(--font-heading);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 2px;
+  color: var(--text-primary);
+}
+
+.team__sep {
+  color: var(--text-muted);
+}
+
+/* Botón Contactar */
+.team__action {
+  margin: 0.5rem 0 1rem;
+}
+
+.team__cta-btn {
+  display: inline-block;
+  padding: 0.95rem 2.8rem;
+  background-color: #1b382b; /* Verde oscuro elegante como en la referencia de Serxo */
+  color: #ffffff;
+  border: 1px solid #2d5543;
+  border-radius: 4px;
+  font-family: var(--font-heading);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  transition: all var(--transition-base);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+.team__cta-btn:hover {
+  background-color: #244b3a;
+  border-color: #3b6c56;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(36, 75, 58, 0.3);
+}
+
+/* Badges / Sellos inferiores de calidad */
+.team__badges {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.85rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.team__badge {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  padding: 0.8rem 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.2rem;
+  transition: border-color var(--transition-fast), transform var(--transition-fast);
+}
+
+.team__badge:hover {
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: translateY(-3px);
+}
+
+.team__badge-top {
+  font-family: var(--font-heading);
+  font-size: 0.55rem;
+  letter-spacing: 1.5px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.team__badge-main {
+  font-family: var(--font-heading);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--text-primary);
+}
+
+.team__badge-sub {
+  font-family: var(--font-body);
+  font-size: 0.65rem;
+  color: var(--text-secondary);
+}
+
+/* ── Responsive ── */
+@media (max-width: 992px) {
+  .team__container {
+    grid-template-columns: 1fr;
+    gap: 3.5rem;
+  }
+
+  .team__photo-wrapper {
+    max-width: 400px;
+  }
+
+  .team__photo-backdrop {
+    display: none;
+  }
+
+  .team__info-wrapper {
+    text-align: center;
+    align-items: center;
+  }
+
+  .team__specialties {
+    justify-content: center;
+  }
+
+  .team__badges {
+    width: 100%;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .team {
+    padding: 4.5rem 1.5rem;
+  }
+
+  .team__badges {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.6rem;
+  }
+
+  .team__cta-btn {
+    width: 100%;
+    text-align: center;
+  }
+}
