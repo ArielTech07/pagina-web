@@ -22,15 +22,15 @@ const images = [
   { id: 1, category: 'bodas', title: 'Boda en el Jardín', gradient: 'linear-gradient(135deg, #2c1810, #4a2c20)' },
   { id: 2, category: 'bodas', title: 'Ceremonia al Atardecer', gradient: 'linear-gradient(135deg, #1a1520, #3a2540)' },
   { id: 3, category: 'eventos', title: 'Gala Corporativa', gradient: 'linear-gradient(135deg, #101820, #203040)' },
-  { id: 4, category: 'sesiones', title: 'Retrato Artístico', gradient: 'linear-gradient(135deg, #1a1a10, #303020)' },
-  { id: 5, category: 'videos', title: 'Videoclip Musical', gradient: 'linear-gradient(135deg, #200a1a, #401030)' },
-  { id: 6, category: 'corporativo', title: 'Evento Empresarial', gradient: 'linear-gradient(135deg, #0a1520, #152535)' },
-  { id: 7, category: 'bodas', title: 'Recepción Elegante', gradient: 'linear-gradient(135deg, #201510, #402a20)' },
-  { id: 8, category: 'sesiones', title: 'Sesión Exterior', gradient: 'linear-gradient(135deg, #101a10, #203020)' },
-  { id: 9, category: 'eventos', title: 'Fiesta de 15 Años', gradient: 'linear-gradient(135deg, #1a1025, #2a1840)' },
-  { id: 10, category: 'videos', title: 'Documental Corto', gradient: 'linear-gradient(135deg, #151515, #2a2a2a)' },
-  { id: 11, category: 'corporativo', title: 'Conferencia Anual', gradient: 'linear-gradient(135deg, #0f1a20, #1a2a35)' },
-  { id: 12, category: 'sesiones', title: 'Fotografía de Producto', gradient: 'linear-gradient(135deg, #1a1510, #2a2520)' }
+  // { id: 4, category: 'sesiones', title: 'Retrato Artístico', gradient: 'linear-gradient(135deg, #1a1a10, #303020)' },
+  // { id: 5, category: 'videos', title: 'Videoclip Musical', gradient: 'linear-gradient(135deg, #200a1a, #401030)' },
+  // { id: 6, category: 'corporativo', title: 'Evento Empresarial', gradient: 'linear-gradient(135deg, #0a1520, #152535)' },
+  // { id: 7, category: 'bodas', title: 'Recepción Elegante', gradient: 'linear-gradient(135deg, #201510, #402a20)' },
+  // { id: 8, category: 'sesiones', title: 'Sesión Exterior', gradient: 'linear-gradient(135deg, #101a10, #203020)' },
+  // { id: 9, category: 'eventos', title: 'Fiesta de 15 Años', gradient: 'linear-gradient(135deg, #1a1025, #2a1840)' },
+  // { id: 10, category: 'videos', title: 'Documental Corto', gradient: 'linear-gradient(135deg, #151515, #2a2a2a)' },
+  // { id: 11, category: 'corporativo', title: 'Conferencia Anual', gradient: 'linear-gradient(135deg, #0f1a20, #1a2a35)' },
+  // { id: 12, category: 'sesiones', title: 'Fotografía de Producto', gradient: 'linear-gradient(135deg, #1a1510, #2a2520)' }
 ];
 
 const Gallery = () => {
