@@ -5,6 +5,8 @@ import {
   viewportConfig,
 } from '../../utils/motionVariants';
 import './Footer.css';
+import logoJude from '../../assets/logo_jude.png';
+
 
 const Footer = () => {
   const navLinks = [
@@ -16,10 +18,9 @@ const Footer = () => {
   ];
 
   const socialLinks = [
-    { label: 'Instagram', href: '#' },
-    { label: 'TikTok', href: '#' },
-    { label: 'YouTube', href: '#' },
-    { label: 'WhatsApp', href: '#' },
+    { label: 'Instagram', href: 'https://www.instagram.com/judefilmsfotoyvideo/' },
+    { label: 'Facebook', href: 'https://www.facebook.com/judefilms' },
+    { label: 'WhatsApp', href: 'https://wa.me/903277681?text=Texto' },
   ];
 
   return (
@@ -32,8 +33,9 @@ const Footer = () => {
         variants={containerStagger}
       >
         <motion.div className="footer__brand" variants={headerVariants}>
-          <h3>JUDEFILMS</h3>
-          <p>Producción Audiovisual Profesional</p>
+          <a href="#hero" className="footer__logo">
+            <img src={logoJude} alt="JudeFilms Logo" className="footer__logo-img" />
+          </a>          <p>Producción Audiovisual Profesional</p>
         </motion.div>
 
         <motion.div className="footer__links" variants={headerVariants}>

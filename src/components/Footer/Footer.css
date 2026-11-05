@@ -81,6 +81,23 @@
   letter-spacing: 1px;
 }
 
+/* Logo de la pagina footer */
+.footer__logo:hover {
+  opacity: 0.85;
+}
+
+.footer__logo-img {
+  height: 48px;
+  width: auto;
+  object-fit: contain;
+  display: block;
+  transition: height var(--transition-base);
+}
+
+.footer__logo-img {
+  height: 70px;
+}
+
 /* ── Responsive ── */
 @media (max-width: 768px) {
   .footer__content {

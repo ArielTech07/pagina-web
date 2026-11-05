@@ -2,8 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import SectionTitle from '../common/SectionTitle';
 import {
-  containerStagger,
-  cardVariants,
+  easeOutExpo,
   headerVariants,
   viewportConfig,
 } from '../../utils/motionVariants';
@@ -19,19 +18,35 @@ const categories = [
 ];
 
 const images = [
-  { id: 1, category: 'bodas', title: 'Boda en el Jardín', gradient: 'linear-gradient(135deg, #2c1810, #4a2c20)' },
-  { id: 2, category: 'bodas', title: 'Ceremonia al Atardecer', gradient: 'linear-gradient(135deg, #1a1520, #3a2540)' },
-  { id: 3, category: 'eventos', title: 'Gala Corporativa', gradient: 'linear-gradient(135deg, #101820, #203040)' },
-  // { id: 4, category: 'sesiones', title: 'Retrato Artístico', gradient: 'linear-gradient(135deg, #1a1a10, #303020)' },
-  // { id: 5, category: 'videos', title: 'Videoclip Musical', gradient: 'linear-gradient(135deg, #200a1a, #401030)' },
-  // { id: 6, category: 'corporativo', title: 'Evento Empresarial', gradient: 'linear-gradient(135deg, #0a1520, #152535)' },
-  // { id: 7, category: 'bodas', title: 'Recepción Elegante', gradient: 'linear-gradient(135deg, #201510, #402a20)' },
-  // { id: 8, category: 'sesiones', title: 'Sesión Exterior', gradient: 'linear-gradient(135deg, #101a10, #203020)' },
-  // { id: 9, category: 'eventos', title: 'Fiesta de 15 Años', gradient: 'linear-gradient(135deg, #1a1025, #2a1840)' },
-  // { id: 10, category: 'videos', title: 'Documental Corto', gradient: 'linear-gradient(135deg, #151515, #2a2a2a)' },
-  // { id: 11, category: 'corporativo', title: 'Conferencia Anual', gradient: 'linear-gradient(135deg, #0f1a20, #1a2a35)' },
-  // { id: 12, category: 'sesiones', title: 'Fotografía de Producto', gradient: 'linear-gradient(135deg, #1a1510, #2a2520)' }
+  { id: 1, category: 'bodas', title: 'Boda en el Jardín', subtitle: 'Cobertura Cinematográfica', gradient: 'linear-gradient(135deg, #2c1810, #4a2c20)' },
+  { id: 2, category: 'bodas', title: 'Ceremonia al Atardecer', subtitle: 'Foto & Video Emotivo', gradient: 'linear-gradient(135deg, #1a1520, #3a2540)' },
+  { id: 3, category: 'eventos', title: 'Gala de Premiación', subtitle: 'Producción Multicámara', gradient: 'linear-gradient(135deg, #101820, #203040)' },
+  // { id: 4, category: 'sesiones', title: 'Retrato Artístico', subtitle: 'Iluminación de Estudio', gradient: 'linear-gradient(135deg, #1a1a10, #303020)' },
+  // { id: 5, category: 'videos', title: 'Videoclip Musical', subtitle: 'Dirección & Color Grading', gradient: 'linear-gradient(135deg, #200a1a, #401030)' },
+  // { id: 6, category: 'corporativo', title: 'Lanzamiento de Marca', subtitle: 'Aftermovie Corporativo', gradient: 'linear-gradient(135deg, #0a1520, #152535)' },
+  // { id: 7, category: 'bodas', title: 'Recepción Elegante', subtitle: 'Highlights 4K', gradient: 'linear-gradient(135deg, #201510, #402a20)' },
+  // { id: 8, category: 'sesiones', title: 'Sesión Exterior', subtitle: 'Golden Hour Photography', gradient: 'linear-gradient(135deg, #101a10, #203020)' },
+  // { id: 9, category: 'eventos', title: 'Fiesta de 15 Años', subtitle: 'Cobertura Completa', gradient: 'linear-gradient(135deg, #1a1025, #2a1840)' },
+  // { id: 10, category: 'videos', title: 'Documental Corto', subtitle: 'Narrativa Visual', gradient: 'linear-gradient(135deg, #151515, #2a2a2a)' },
+  // { id: 11, category: 'corporativo', title: 'Conferencia Anual', subtitle: 'Streaming & Grabación', gradient: 'linear-gradient(135deg, #0f1a20, #1a2a35)' },
+  // { id: 12, category: 'sesiones', title: 'Fotografía Editorial', subtitle: 'Estilo Cinematográfico', gradient: 'linear-gradient(135deg, #1a1510, #2a2520)' }
 ];
+
+const itemAnim = {
+  hidden: { opacity: 0, scale: 0.9, filter: 'blur(4px)' },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    filter: 'blur(0px)',
+    transition: { duration: 0.35, ease: easeOutExpo }
+  },
+  exit: {
+    opacity: 0,
+    scale: 0.9,
+    filter: 'blur(4px)',
+    transition: { duration: 0.25, ease: easeOutExpo }
+  }
+};
 
 const Gallery = () => {
   const [activeFilter, setActiveFilter] = useState('todos');
@@ -75,6 +90,7 @@ const Gallery = () => {
           subtitle="Una muestra de lo que hacemos con pasión"
         />
 
+        {/* Filtros de Categoría */}
         <motion.div
           className="gallery__filters"
           initial="hidden"
@@ -93,35 +109,72 @@ const Gallery = () => {
           ))}
         </motion.div>
 
-        <motion.div
-          className="gallery__grid"
-          initial="hidden"
-          whileInView="visible"
-          viewport={viewportConfig}
-          variants={containerStagger}
-        >
-          {filteredImages.map(image => (
-            <motion.div
-              key={image.id}
-              layout
-              variants={cardVariants}
-              className="gallery__item"
-              onClick={() => setSelectedImage(image)}
-            >
-              <div
-                className="gallery__image"
-                style={{ background: image.gradient }}
-              >
-                {image.title}
-              </div>
-              <div className="gallery__overlay">
-                <span>{image.title}</span>
-              </div>
-            </motion.div>
-          ))}
-        </motion.div>
+        {/* Cuadrícula de Galería con animación fluida en filtros */}
+        <div className="gallery__grid-wrapper">
+          <motion.div className="gallery__grid" layout>
+            <AnimatePresence mode="popLayout">
+              {filteredImages.map(image => (
+                <motion.div
+                  key={image.id}
+                  layout
+                  variants={itemAnim}
+                  initial="hidden"
+                  animate="visible"
+                  exit="exit"
+                  className="gallery__item"
+                  onClick={() => setSelectedImage(image)}
+                >
+                  {image.src ? (
+                    <img
+                      src={image.src}
+                      alt={image.title}
+                      className="gallery__image-tag"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <div
+                      className="gallery__image"
+                      style={{ background: image.gradient }}
+                    >
+                      <div className="gallery__image-placeholder">
+                        <svg
+                          className="gallery__image-icon"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="1.2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
+                          <circle cx="12" cy="13" r="4" />
+                        </svg>
+                        <span className="gallery__image-title-preview">{image.title}</span>
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="gallery__overlay">
+                    <span className="gallery__overlay-category">{image.category}</span>
+                    <h4 className="gallery__overlay-title">{image.title}</h4>
+                    {image.subtitle && (
+                      <span className="gallery__overlay-sub">{image.subtitle}</span>
+                    )}
+                  </div>
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </motion.div>
+
+          {filteredImages.length === 0 && (
+            <div className="gallery__empty">
+              <p>Próximamente más proyectos en esta categoría.</p>
+            </div>
+          )}
+        </div>
       </div>
 
+      {/* Lightbox Modal */}
       <AnimatePresence>
         {selectedImage && (
           <motion.div
@@ -137,31 +190,46 @@ const Gallery = () => {
             />
             <motion.div
               className="lightbox__content"
-              style={{ background: selectedImage.gradient }}
+              style={{ background: selectedImage.gradient || '#111111' }}
               initial={{ scale: 0.92, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.92, opacity: 0 }}
               transition={{ duration: 0.25 }}
             >
-              {selectedImage.title}
+              {selectedImage.src ? (
+                <img
+                  src={selectedImage.src}
+                  alt={selectedImage.title}
+                  className="lightbox__img"
+                />
+              ) : (
+                <div className="lightbox__info-panel">
+                  <span className="lightbox__tag">{selectedImage.category}</span>
+                  <h3 className="lightbox__title">{selectedImage.title}</h3>
+                  {selectedImage.subtitle && (
+                    <p className="lightbox__subtitle">{selectedImage.subtitle}</p>
+                  )}
+                </div>
+              )}
+
               <button
                 className="lightbox__close"
                 onClick={() => setSelectedImage(null)}
-                aria-label="Cerrar"
+                aria-label="Cerrar visor"
               >
                 ✕
               </button>
               <button
                 className="lightbox__nav lightbox__nav--prev"
                 onClick={() => navigateImage('prev')}
-                aria-label="Anterior"
+                aria-label="Foto anterior"
               >
                 ◀
               </button>
               <button
                 className="lightbox__nav lightbox__nav--next"
                 onClick={() => navigateImage('next')}
-                aria-label="Siguiente"
+                aria-label="Foto siguiente"
               >
                 ▶
               </button>

@@ -1,58 +1,83 @@
+/* ===== Gallery Section Styles ===== */
+
 .gallery {
   background: var(--bg-secondary);
   padding: 6rem 2rem;
+  position: relative;
 }
 
+.gallery__container {
+  max-width: var(--container-max);
+  margin: 0 auto;
+}
+
+/* ── Filter Buttons ── */
 .gallery__filters {
   display: flex;
   justify-content: center;
-  gap: 0.5rem;
+  gap: 0.65rem;
   flex-wrap: wrap;
   margin-bottom: 3rem;
-  max-width: var(--container-max);
-  margin-left: auto;
-  margin-right: auto;
 }
 
 .gallery__filter-btn {
   font-family: var(--font-heading);
-  font-size: 0.75rem;
-  padding: 0.7rem 1.5rem;
+  font-size: 0.78rem;
+  padding: 0.65rem 1.4rem;
   text-transform: uppercase;
   letter-spacing: 2px;
   color: var(--text-muted);
-  border: 1px solid transparent;
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 4px;
-  transition: all var(--transition-fast);
   background: transparent;
   cursor: pointer;
+  transition: all var(--transition-fast);
 }
 
 .gallery__filter-btn:hover {
   color: var(--text-primary);
-  border-color: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.03);
 }
 
 .gallery__filter-btn.active {
-  color: var(--text-primary);
+  color: #ffffff;
   border-color: var(--text-primary);
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* ── Grid Container ── */
+.gallery__grid-wrapper {
+  position: relative;
+  min-height: 420px; /* Evita que la página salte o colapse cuando cambian los filtros */
 }
 
 .gallery__grid {
-  max-width: var(--container-max);
-  margin: 0 auto;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 1rem;
+  gap: 1.25rem;
+  width: 100%;
 }
 
+/* ── Gallery Card Item ── */
 .gallery__item {
   position: relative;
   aspect-ratio: 4 / 3;
-  border-radius: 4px;
+  border-radius: 6px;
   overflow: hidden;
   cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background-color: #121212;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+.gallery__image-tag {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform var(--transition-base);
 }
 
 .gallery__image {
@@ -61,42 +86,94 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: var(--font-heading);
-  font-size: 0.9rem;
-  color: var(--text-muted);
-  letter-spacing: 1px;
   transition: transform var(--transition-base);
 }
 
-.gallery__item:hover .gallery__image {
-  transform: scale(1.05);
+.gallery__image-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  color: rgba(255, 255, 255, 0.5);
+  text-align: center;
+  padding: 1rem;
 }
 
+.gallery__image-icon {
+  width: 32px;
+  height: 32px;
+  opacity: 0.7;
+}
+
+.gallery__image-title-preview {
+  font-family: var(--font-heading);
+  font-size: 0.8rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+.gallery__item:hover .gallery__image,
+.gallery__item:hover .gallery__image-tag {
+  transform: scale(1.06);
+}
+
+/* ── Card Overlay ── */
 .gallery__overlay {
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.6);
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.88) 0%, rgba(0, 0, 0, 0.2) 65%, transparent 100%);
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 1.25rem;
   opacity: 0;
   transition: opacity var(--transition-base);
+  z-index: 2;
 }
 
-.gallery__overlay span {
+.gallery__overlay-category {
   font-family: var(--font-heading);
-  font-size: 0.85rem;
-  font-weight: 600;
+  font-size: 0.65rem;
   letter-spacing: 2px;
   text-transform: uppercase;
-  color: white;
+  color: var(--text-muted);
+  margin-bottom: 0.2rem;
+}
+
+.gallery__overlay-title {
+  font-family: var(--font-heading);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #ffffff;
+  margin: 0;
+}
+
+.gallery__overlay-sub {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  margin-top: 0.25rem;
 }
 
 .gallery__item:hover .gallery__overlay {
   opacity: 1;
 }
 
-/* Lightbox */
+/* ── Empty State ── */
+.gallery__empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 250px;
+  color: var(--text-muted);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  text-align: center;
+}
+
+/* ── Lightbox Modal ── */
 .lightbox {
   position: fixed;
   inset: 0;
@@ -104,114 +181,165 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  animation: fadeIn 0.3s ease;
 }
 
 .lightbox__backdrop {
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.95);
+  background: rgba(0, 0, 0, 0.94);
+  backdrop-filter: blur(8px);
 }
 
 .lightbox__content {
   position: relative;
-  z-index: 1;
-  width: 80vw;
-  max-width: 900px;
+  z-index: 2;
+  width: 85vw;
+  max-width: 920px;
   aspect-ratio: 16 / 9;
-  border-radius: 4px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8);
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
+}
+
+.lightbox__img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.lightbox__info-panel {
+  text-align: center;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.lightbox__tag {
   font-family: var(--font-heading);
-  font-size: 1.2rem;
-  color: var(--text-secondary);
+  font-size: 0.75rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.lightbox__title {
+  font-family: var(--font-heading);
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  font-weight: 700;
   letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #ffffff;
+  margin: 0;
+}
+
+.lightbox__subtitle {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  color: var(--text-secondary);
 }
 
 .lightbox__close {
   position: absolute;
-  top: -3rem;
+  top: -3.5rem;
   right: 0;
-  font-size: 1.5rem;
-  color: white;
-  cursor: pointer;
-  background: none;
+  font-size: 1.8rem;
+  color: #ffffff;
+  background: transparent;
   border: none;
-  z-index: 1;
+  cursor: pointer;
+  padding: 0.5rem;
+  line-height: 1;
+  transition: opacity var(--transition-fast), transform var(--transition-fast);
+}
+
+.lightbox__close:hover {
+  opacity: 0.7;
+  transform: scale(1.1);
 }
 
 .lightbox__nav {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  font-size: 2rem;
-  color: white;
-  cursor: pointer;
-  background: rgba(0, 0, 0, 0.5);
-  border: none;
-  padding: 1rem;
+  font-size: 1.4rem;
+  color: #ffffff;
+  background: rgba(10, 10, 10, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 0.9rem 1.1rem;
   border-radius: 4px;
-  transition: background var(--transition-fast);
+  cursor: pointer;
+  transition: all var(--transition-fast);
 }
 
 .lightbox__nav:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.4);
 }
 
 .lightbox__nav--prev {
-  left: -4rem;
+  left: -4.5rem;
 }
 
 .lightbox__nav--next {
-  right: -4rem;
+  right: -4.5rem;
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-/* Responsive */
-@media (max-width: 992px) {
+/* ── Responsive ── */
+@media (max-width: 1024px) {
   .gallery__grid {
     grid-template-columns: repeat(3, 1fr);
+  }
+
+  .lightbox__nav--prev {
+    left: 1rem;
+  }
+
+  .lightbox__nav--next {
+    right: 1rem;
   }
 }
 
 @media (max-width: 768px) {
+  .gallery {
+    padding: 4.5rem 1.5rem;
+  }
+
   .gallery__grid {
     grid-template-columns: repeat(2, 1fr);
+    gap: 0.85rem;
+  }
+
+  .gallery__filters {
+    gap: 0.45rem;
+    margin-bottom: 2rem;
+  }
+
+  .gallery__filter-btn {
+    font-size: 0.7rem;
+    padding: 0.5rem 1rem;
   }
 
   .lightbox__content {
-    width: 95vw;
-  }
-
-  .lightbox__nav--prev {
-    left: 0.5rem;
-  }
-
-  .lightbox__nav--next {
-    right: 0.5rem;
+    width: 92vw;
   }
 
   .lightbox__close {
-    top: -2.5rem;
+    top: -2.8rem;
   }
 }
 
 @media (max-width: 480px) {
-  .gallery__filters {
-    gap: 0.3rem;
+  .gallery__grid {
+    grid-template-columns: 1fr;
   }
 
-  .gallery__filter-btn {
-    font-size: 0.65rem;
-    padding: 0.5rem 1rem;
+  .gallery__item {
+    aspect-ratio: 16 / 10;
   }
 }

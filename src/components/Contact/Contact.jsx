@@ -16,6 +16,12 @@ const Contact = () => {
     mensaje: '',
   });
 
+  const socialLinks = [
+    { label: 'Instagram', href: 'https://www.instagram.com/judefilmsfotoyvideo/' },
+    { label: 'Facebook', href: 'https://www.facebook.com/judefilms' },
+    { label: 'WhatsApp', href: 'https://wa.me/903277681?text=Texto' },
+  ];
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -107,22 +113,18 @@ const Contact = () => {
           </div>
           <div className="contact__info-item">
             <span>📍</span>
-            <p>Tu Ciudad, País</p>
+            <p>Lima, Perú</p>
           </div>
 
           <div className="contact__divider" />
 
           <h4>Síguenos</h4>
           <div className="contact__socials">
-            <a href="#" target="_blank" rel="noopener noreferrer">
-              Instagram
-            </a>
-            <a href="#" target="_blank" rel="noopener noreferrer">
-              TikTok
-            </a>
-            <a href="#" target="_blank" rel="noopener noreferrer">
-              YouTube
-            </a>
+            {socialLinks.map((link)=>(
+                <a key={link.label} href={link.href} target="_blank" rel="noopener noreferrer">
+                  {link.label}
+                </a>
+            ))}
           </div>
         </motion.div>
       </div>

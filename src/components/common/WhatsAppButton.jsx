@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 import './WhatsAppButton.css';
 
 const WhatsAppButton = () => {
-  const whatsappUrl = "https://wa.me/numero?text=Texto";
+  const whatsappUrl = "https://wa.me/903 277 681?text=Texto";
 
   return (
     <motion.aside
