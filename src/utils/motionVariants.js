@@ -1,9 +1,8 @@
 export const easeOutExpo = [0.16, 1, 0.3, 1];
 
 export const viewportConfig = {
-  once: false,
-  amount: 0.15,
-  margin: '-20px',
+  once: true,
+  amount: 0.1,
 };
 
 export const containerStagger = {
@@ -37,22 +36,22 @@ export const cardVariants = {
 };
 
 export const fadeLeftVariants = {
-  hidden: { opacity: 0, x: -45, filter: 'blur(6px)' },
+  hidden: { opacity: 0, y: 25, filter: 'blur(4px)' },
   visible: {
     opacity: 1,
-    x: 0,
+    y: 0,
     filter: 'blur(0px)',
-    transition: { duration: 0.65, ease: easeOutExpo },
+    transition: { duration: 0.6, ease: easeOutExpo },
   },
 };
 
 export const fadeRightVariants = {
-  hidden: { opacity: 0, x: 45, filter: 'blur(6px)' },
+  hidden: { opacity: 0, y: 25, filter: 'blur(4px)' },
   visible: {
     opacity: 1,
-    x: 0,
+    y: 0,
     filter: 'blur(0px)',
-    transition: { duration: 0.65, ease: easeOutExpo },
+    transition: { duration: 0.6, ease: easeOutExpo },
   },
 };
 

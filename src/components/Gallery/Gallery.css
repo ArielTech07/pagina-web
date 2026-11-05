@@ -4,11 +4,18 @@
   background: var(--bg-secondary);
   padding: 6rem 2rem;
   position: relative;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: clip;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 .gallery__container {
   max-width: var(--container-max);
   margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 /* ── Filter Buttons ── */
@@ -307,7 +314,7 @@
 
 @media (max-width: 768px) {
   .gallery {
-    padding: 4.5rem 1.5rem;
+    padding: 4.5rem 1rem;
   }
 
   .gallery__grid {
@@ -326,7 +333,8 @@
   }
 
   .lightbox__content {
-    width: 92vw;
+    width: min(92vw, 920px);
+    max-width: calc(100% - 1.5rem);
   }
 
   .lightbox__close {

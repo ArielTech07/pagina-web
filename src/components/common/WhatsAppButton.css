@@ -4,6 +4,8 @@
     bottom: 24px;
     right: 24px;
     z-index: 1000;
+    /* Evita que el botón empuje el ancho del viewport al hacer zoom */
+    max-width: calc(100vw - 48px);
 }
 
 .button__whatsapp {
@@ -48,16 +50,16 @@
     .button__ubication {
         bottom: 16px;
         right: 16px;
+        max-width: calc(100vw - 32px);
     }
 
     .button__whatsapp {
-        width: 3.5rem;  
-        height: 3.5rem; 
+        width: 3.5rem;
+        height: 3.5rem;
     }
 
     .icon__whatsapp {
-        width: 2rem; 
-        height: 2rem; 
+        width: 2rem;
+        height: 2rem;
     }
 }
-

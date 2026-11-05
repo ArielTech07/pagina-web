@@ -18,18 +18,9 @@ const categories = [
 ];
 
 const images = [
-  { id: 1, category: 'bodas', title: 'Boda en el Jardín', subtitle: 'Cobertura Cinematográfica', gradient: 'linear-gradient(135deg, #2c1810, #4a2c20)' },
+  { id: 1, category: 'bodas', title: 'Boda en el Jardín', subtitle: 'Cobertura de shows ', gradient: 'linear-gradient(135deg, #2c1810, #4a2c20)' },
   { id: 2, category: 'bodas', title: 'Ceremonia al Atardecer', subtitle: 'Foto & Video Emotivo', gradient: 'linear-gradient(135deg, #1a1520, #3a2540)' },
-  { id: 3, category: 'eventos', title: 'Gala de Premiación', subtitle: 'Producción Multicámara', gradient: 'linear-gradient(135deg, #101820, #203040)' },
-  // { id: 4, category: 'sesiones', title: 'Retrato Artístico', subtitle: 'Iluminación de Estudio', gradient: 'linear-gradient(135deg, #1a1a10, #303020)' },
-  // { id: 5, category: 'videos', title: 'Videoclip Musical', subtitle: 'Dirección & Color Grading', gradient: 'linear-gradient(135deg, #200a1a, #401030)' },
-  // { id: 6, category: 'corporativo', title: 'Lanzamiento de Marca', subtitle: 'Aftermovie Corporativo', gradient: 'linear-gradient(135deg, #0a1520, #152535)' },
-  // { id: 7, category: 'bodas', title: 'Recepción Elegante', subtitle: 'Highlights 4K', gradient: 'linear-gradient(135deg, #201510, #402a20)' },
-  // { id: 8, category: 'sesiones', title: 'Sesión Exterior', subtitle: 'Golden Hour Photography', gradient: 'linear-gradient(135deg, #101a10, #203020)' },
-  // { id: 9, category: 'eventos', title: 'Fiesta de 15 Años', subtitle: 'Cobertura Completa', gradient: 'linear-gradient(135deg, #1a1025, #2a1840)' },
-  // { id: 10, category: 'videos', title: 'Documental Corto', subtitle: 'Narrativa Visual', gradient: 'linear-gradient(135deg, #151515, #2a2a2a)' },
-  // { id: 11, category: 'corporativo', title: 'Conferencia Anual', subtitle: 'Streaming & Grabación', gradient: 'linear-gradient(135deg, #0f1a20, #1a2a35)' },
-  // { id: 12, category: 'sesiones', title: 'Fotografía Editorial', subtitle: 'Estilo Cinematográfico', gradient: 'linear-gradient(135deg, #1a1510, #2a2520)' }
+  { id: 3, category: 'eventos', title: 'Gala de Premiación', subtitle: 'Producción Multicámara', gradient: 'linear-gradient(135deg, #101820, #203040)' }
 ];
 
 const itemAnim = {

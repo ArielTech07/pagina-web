@@ -4,6 +4,11 @@
   padding: 6rem 2rem;
   background-color: var(--bg-primary);
   position: relative;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: clip;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 /* ── Corporate Showcase Block (Enfoque Principal) ── */
@@ -17,6 +22,8 @@
   box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
   position: relative;
   overflow: hidden;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 /* Acento de luz sutil en la esquina superior */
@@ -367,10 +374,8 @@
 .services__general-section {
   max-width: var(--container-max);
   margin: 0 auto;
-  /* justify-content: center;
-  align-items: center;
-  display: flex;
-  flex-direction: column; */
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .services__general-header {
@@ -403,6 +408,8 @@
   gap: 2rem;
   max-width: 1100px;
   margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .service-card {
@@ -488,11 +495,11 @@
 
 @media (max-width: 768px) {
   .services {
-    padding: 4.5rem 1.5rem;
+    padding: 4.5rem 1rem;
   }
 
   .corporate-showcase {
-    padding: 2rem 1.25rem;
+    padding: 1.75rem 1rem;
     margin-bottom: 3.5rem;
   }
 
@@ -511,5 +518,8 @@
 
   .services__grid {
     grid-template-columns: 1fr;
+  }
+  .corporate-showcase__features{
+    display: none;
   }
 }

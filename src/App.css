@@ -1,9 +1,5 @@
 /* ===== App Global Layout Styles ===== */
 
-main {
-  min-height: 100vh;
-}
-
 /* Alternate section backgrounds */
 section:nth-of-type(even) {
   background-color: var(--bg-secondary);

@@ -43,6 +43,11 @@
 html {
   scroll-behavior: smooth;
   font-size: 16px;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  overflow-x: clip;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
@@ -50,9 +55,36 @@ body {
   background-color: var(--bg-primary);
   color: var(--text-primary);
   line-height: 1.6;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
   overflow-x: hidden;
+  overflow-x: clip;
+  position: relative;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  overflow-x: clip;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+main {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  overflow-x: clip;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 a {
@@ -80,14 +112,40 @@ img {
 
 /* ===== Container Utility ===== */
 .container {
+  width: 100%;
   max-width: var(--container-max);
-  margin: 0 auto;
+  margin-left: auto;
+  margin-right: auto;
   padding: 0 2rem;
+  box-sizing: border-box;
 }
 
 /* ===== Section Base ===== */
 section {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  overflow-x: clip;
+  box-sizing: border-box;
   padding: var(--section-padding);
+}
+
+@media (max-width: 768px) {
+  :root {
+    --section-padding: 4.5rem 1.25rem;
+  }
+  .container {
+    padding: 0 1.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --section-padding: 3.5rem 1rem;
+  }
+  .container {
+    padding: 0 1rem;
+  }
 }
 
 /* ===== Scroll Animation Classes ===== */
