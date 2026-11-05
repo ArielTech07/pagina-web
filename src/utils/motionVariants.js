@@ -1,8 +1,9 @@
 export const easeOutExpo = [0.16, 1, 0.3, 1];
 
 export const viewportConfig = {
-  once: true,
-  amount: 0.1,
+  once: false,       /* Las animaciones se re-disparan al subir y bajar */
+  amount: 0.15,
+  margin: '-20px',
 };
 
 export const containerStagger = {
@@ -35,23 +36,26 @@ export const cardVariants = {
   },
 };
 
+/* Slide desde la izquierda — el overflow-x: clip en cada sección
+   impide que el elemento desborde el viewport durante la animación */
 export const fadeLeftVariants = {
-  hidden: { opacity: 0, y: 25, filter: 'blur(4px)' },
+  hidden: { opacity: 0, x: -45, filter: 'blur(6px)' },
   visible: {
     opacity: 1,
-    y: 0,
+    x: 0,
     filter: 'blur(0px)',
-    transition: { duration: 0.6, ease: easeOutExpo },
+    transition: { duration: 0.65, ease: easeOutExpo },
   },
 };
 
+/* Slide desde la derecha */
 export const fadeRightVariants = {
-  hidden: { opacity: 0, y: 25, filter: 'blur(4px)' },
+  hidden: { opacity: 0, x: 45, filter: 'blur(6px)' },
   visible: {
     opacity: 1,
-    y: 0,
+    x: 0,
     filter: 'blur(0px)',
-    transition: { duration: 0.6, ease: easeOutExpo },
+    transition: { duration: 0.65, ease: easeOutExpo },
   },
 };
 

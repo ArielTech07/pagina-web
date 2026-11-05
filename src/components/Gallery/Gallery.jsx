@@ -20,7 +20,7 @@ const categories = [
 const images = [
   { id: 1, category: 'bodas', title: 'Boda en el Jardín', subtitle: 'Cobertura de shows ', gradient: 'linear-gradient(135deg, #2c1810, #4a2c20)' },
   { id: 2, category: 'bodas', title: 'Ceremonia al Atardecer', subtitle: 'Foto & Video Emotivo', gradient: 'linear-gradient(135deg, #1a1520, #3a2540)' },
-  { id: 3, category: 'eventos', title: 'Gala de Premiación', subtitle: 'Producción Multicámara', gradient: 'linear-gradient(135deg, #101820, #203040)' }
+  { id: 3, category: 'eventos', title: '', subtitle: 'Producción Multicámara', gradient: 'linear-gradient(135deg, #101820, #203040)' }
 ];
 
 const itemAnim = {
