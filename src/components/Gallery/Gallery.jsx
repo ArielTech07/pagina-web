@@ -1,77 +1,96 @@
-import { useState, useEffect, useCallback } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import SectionTitle from '../common/SectionTitle';
+import { useState, useEffect, useCallback } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import SectionTitle from "../common/SectionTitle";
 import {
   easeOutExpo,
   headerVariants,
   viewportConfig,
-} from '../../utils/motionVariants';
-import './Gallery.css';
+} from "../../utils/motionVariants";
+import "./Gallery.css";
 
 const categories = [
-  { id: 'todos', label: 'Todos' },
-  { id: 'bodas', label: 'Bodas' },
-  { id: 'eventos', label: 'Eventos' },
-  { id: 'sesiones', label: 'Sesiones' },
-  { id: 'videos', label: 'Videos' },
-  { id: 'corporativo', label: 'Corporativo' }
-];
-
-const images = [
-  { id: 1, category: 'bodas', title: 'Boda en el Jardín', subtitle: 'Cobertura de shows ', gradient: 'linear-gradient(135deg, #2c1810, #4a2c20)' },
-  { id: 2, category: 'bodas', title: 'Ceremonia al Atardecer', subtitle: 'Foto & Video Emotivo', gradient: 'linear-gradient(135deg, #1a1520, #3a2540)' },
-  { id: 3, category: 'eventos', title: '', subtitle: 'Producción Multicámara', gradient: 'linear-gradient(135deg, #101820, #203040)' }
+  { id: "todos", label: "Todos" },
+  { id: "bodas", label: "Bodas" },
+  { id: "eventos", label: "Eventos" },
+  { id: "sesiones", label: "Sesiones" },
+  { id: "videos", label: "Videos" },
+  { id: "corporativo", label: "Corporativo" },
 ];
 
 const itemAnim = {
-  hidden: { opacity: 0, scale: 0.9, filter: 'blur(4px)' },
+  hidden: { opacity: 0, scale: 0.9, filter: "blur(4px)" },
   visible: {
     opacity: 1,
     scale: 1,
-    filter: 'blur(0px)',
-    transition: { duration: 0.35, ease: easeOutExpo }
+    filter: "blur(0px)",
+    transition: { duration: 0.35, ease: easeOutExpo },
   },
   exit: {
     opacity: 0,
     scale: 0.9,
-    filter: 'blur(4px)',
-    transition: { duration: 0.25, ease: easeOutExpo }
-  }
+    filter: "blur(4px)",
+    transition: { duration: 0.25, ease: easeOutExpo },
+  },
 };
 
 const Gallery = () => {
-  const [activeFilter, setActiveFilter] = useState('todos');
+  const [activeFilter, setActiveFilter] = useState("todos");
   const [selectedImage, setSelectedImage] = useState(null);
+  const [images, setImages] = useState([]);
 
-  const filteredImages = activeFilter === 'todos'
-    ? images
-    : images.filter(img => img.category === activeFilter);
+  const filteredImages =
+    activeFilter === "todos"
+      ? images
+      : images.filter((img) => img.category === activeFilter);
 
-  const navigateImage = useCallback((direction) => {
-    if (!selectedImage) return;
-    const currentIndex = filteredImages.findIndex(img => img.id === selectedImage.id);
-    const newIndex = direction === 'next'
-      ? (currentIndex + 1) % filteredImages.length
-      : (currentIndex - 1 + filteredImages.length) % filteredImages.length;
-    setSelectedImage(filteredImages[newIndex]);
-  }, [selectedImage, filteredImages]);
+  const navigateImage = useCallback(
+    (direction) => {
+      if (!selectedImage) return;
+      const currentIndex = filteredImages.findIndex(
+        (img) => img.id === selectedImage.id,
+      );
+      const newIndex =
+        direction === "next"
+          ? (currentIndex + 1) % filteredImages.length
+          : (currentIndex - 1 + filteredImages.length) % filteredImages.length;
+      setSelectedImage(filteredImages[newIndex]);
+    },
+    [selectedImage, filteredImages],
+  );
 
   useEffect(() => {
     if (!selectedImage) return;
 
     const handleKeyDown = (e) => {
-      if (e.key === 'Escape') {
+      if (e.key === "Escape") {
         setSelectedImage(null);
-      } else if (e.key === 'ArrowLeft') {
-        navigateImage('prev');
-      } else if (e.key === 'ArrowRight') {
-        navigateImage('next');
+      } else if (e.key === "ArrowLeft") {
+        navigateImage("prev");
+      } else if (e.key === "ArrowRight") {
+        navigateImage("next");
       }
     };
 
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, [selectedImage, navigateImage]);
+
+  useEffect(() => {
+    const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8080/api";
+    fetch(`${API_URL}/public/galeria`)
+      .then((res) => res.json())
+      .then((data) => {
+        const adaptadas = data.map((item) => ({
+          id: item.id,
+          category: item.categoria,
+          src: item.imageUrl,
+          title: item.categoria.toUpperCase(),
+          subtitle: "JudeFilms",
+        }));
+        setImages(adaptadas);
+      })
+      .catch((err) => console.error("Error al cargar galería:", err));
+  }, []);
 
   return (
     <section id="gallery" className="gallery">
@@ -89,10 +108,10 @@ const Gallery = () => {
           viewport={viewportConfig}
           variants={headerVariants}
         >
-          {categories.map(cat => (
+          {categories.map((cat) => (
             <button
               key={cat.id}
-              className={`gallery__filter-btn ${activeFilter === cat.id ? 'active' : ''}`}
+              className={`gallery__filter-btn ${activeFilter === cat.id ? "active" : ""}`}
               onClick={() => setActiveFilter(cat.id)}
             >
               {cat.label}
@@ -104,7 +123,7 @@ const Gallery = () => {
         <div className="gallery__grid-wrapper">
           <motion.div className="gallery__grid" layout>
             <AnimatePresence mode="popLayout">
-              {filteredImages.map(image => (
+              {filteredImages.map((image) => (
                 <motion.div
                   key={image.id}
                   layout
@@ -140,16 +159,22 @@ const Gallery = () => {
                           <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
                           <circle cx="12" cy="13" r="4" />
                         </svg>
-                        <span className="gallery__image-title-preview">{image.title}</span>
+                        <span className="gallery__image-title-preview">
+                          {image.title}
+                        </span>
                       </div>
                     </div>
                   )}
 
                   <div className="gallery__overlay">
-                    <span className="gallery__overlay-category">{image.category}</span>
+                    <span className="gallery__overlay-category">
+                      {image.category}
+                    </span>
                     <h4 className="gallery__overlay-title">{image.title}</h4>
                     {image.subtitle && (
-                      <span className="gallery__overlay-sub">{image.subtitle}</span>
+                      <span className="gallery__overlay-sub">
+                        {image.subtitle}
+                      </span>
                     )}
                   </div>
                 </motion.div>
@@ -181,7 +206,7 @@ const Gallery = () => {
             />
             <motion.div
               className="lightbox__content"
-              style={{ background: selectedImage.gradient || '#111111' }}
+              style={{ background: selectedImage.gradient || "#111111" }}
               initial={{ scale: 0.92, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.92, opacity: 0 }}
@@ -195,10 +220,14 @@ const Gallery = () => {
                 />
               ) : (
                 <div className="lightbox__info-panel">
-                  <span className="lightbox__tag">{selectedImage.category}</span>
+                  <span className="lightbox__tag">
+                    {selectedImage.category}
+                  </span>
                   <h3 className="lightbox__title">{selectedImage.title}</h3>
                   {selectedImage.subtitle && (
-                    <p className="lightbox__subtitle">{selectedImage.subtitle}</p>
+                    <p className="lightbox__subtitle">
+                      {selectedImage.subtitle}
+                    </p>
                   )}
                 </div>
               )}
@@ -212,14 +241,14 @@ const Gallery = () => {
               </button>
               <button
                 className="lightbox__nav lightbox__nav--prev"
-                onClick={() => navigateImage('prev')}
+                onClick={() => navigateImage("prev")}
                 aria-label="Foto anterior"
               >
                 ◀
               </button>
               <button
                 className="lightbox__nav lightbox__nav--next"
-                onClick={() => navigateImage('next')}
+                onClick={() => navigateImage("next")}
                 aria-label="Foto siguiente"
               >
                 ▶
