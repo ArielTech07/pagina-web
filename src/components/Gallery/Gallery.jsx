@@ -70,7 +70,7 @@ const Gallery = () => {
         navigateImage("next");
       }
     };
-
+    //Hola :D
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [selectedImage, navigateImage]);
