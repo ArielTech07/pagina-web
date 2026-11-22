@@ -127,13 +127,38 @@
   display: flex;
   align-items: center;
   gap: 1rem;
-  margin-bottom: 1rem;
+  margin-bottom: 1.15rem;
   font-size: 0.95rem;
   color: var(--text-secondary);
 }
 
-.contact__info-item span {
-  font-size: 1.2rem;
+.contact__info-icon-wrapper {
+  width: 38px;
+  height: 38px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-primary);
+  flex-shrink: 0;
+  transition: all var(--transition-fast);
+}
+
+
+.contact__info-icon {
+  width: 18px;
+  height: 18px;
+}
+
+.contact__info-link {
+  color: var(--text-secondary);
+  transition: color var(--transition-fast);
+}
+
+.contact__info-link:hover {
+  color: #ffffff;
 }
 
 /* ── Divider ── */

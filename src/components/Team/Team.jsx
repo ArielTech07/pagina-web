@@ -1,16 +1,19 @@
-import { motion } from 'framer-motion';
-import SectionTitle from '../common/SectionTitle';
+import { motion } from "framer-motion";
+import SectionTitle from "../common/SectionTitle";
 import {
   fadeLeftVariants,
   fadeRightVariants,
   viewportConfig,
-} from '../../utils/motionVariants';
-import './Team.css';
+} from "../../utils/motionVariants";
+import "./Team.css";
 
 const Team = () => {
   return (
     <section id="team" className="team">
-      <SectionTitle title="Quiénes Somos" subtitle="El equipo detrás de cada toma" />
+      <SectionTitle
+        title="Quiénes Somos"
+        subtitle="El equipo detrás de cada toma"
+      />
 
       <div className="team__container">
         {/* Lado izquierdo: Foto de los dos juntos */}
@@ -62,21 +65,25 @@ const Team = () => {
           </h3>
 
           <p className="team__bio">
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dolorem amet quas voluptate reiciendis unde et tenetur repellendus suscipit voluptatem expedita enim, illo molestiae delectus hic accusamus voluptatibus, quaerat aspernatur qui!
+            En Judefilms creemos que las mejores fotografías nacen de la
+            confianza y la espontaneidad. Somos un equipo apasionado por
+            capturar la esencia real de cada celebración, transformando
+            instantes fugaces en recuerdos visuales que perduran para siempre.
           </p>
 
           <div className="team__specialties">
-            <span>BODAS</span>
-            <span className="team__sep">—</span>
             <span>EVENTOS</span>
             <span className="team__sep">—</span>
             <span>SESIONES</span>
             <span className="team__sep">—</span>
-            <span>Quinceañeros</span>
+            <span>QUINCEAÑEROS</span>
           </div>
 
           <p className="team__bio-second">
-            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Consequatur voluptatibus maiores similique libero officia blanditiis, voluptates eos. Vitae nisi ullam molestiae expedita autem voluptate, obcaecati dignissimos ex corporis numquam eligendi.
+            Sabemos lo importante que es cada fecha para ti. Por eso,
+            acompañamos cada etapa de tu celebración con discreción,
+            profesionalismo y creatividad, asegurando un resultado elegante y
+            lleno de vida.
           </p>
 
           <div className="team__action">

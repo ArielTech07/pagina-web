@@ -13,7 +13,6 @@ const categories = [
   { id: "bodas", label: "Bodas" },
   { id: "eventos", label: "Eventos" },
   { id: "sesiones", label: "Sesiones" },
-  { id: "videos", label: "Videos" },
   { id: "corporativo", label: "Corporativo" },
 ];
 
@@ -70,7 +69,6 @@ const Gallery = () => {
         navigateImage("next");
       }
     };
-    //Hola :D
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [selectedImage, navigateImage]);
@@ -80,7 +78,16 @@ const Gallery = () => {
     fetch(`${API_URL}/public/galeria`)
       .then((res) => res.json())
       .then((data) => {
-        const adaptadas = data.map((item) => ({
+        // Filtrar para que solo carguen fotografías y NO los videos corporativos
+        const soloFotos = Array.isArray(data)
+          ? data.filter(
+              (item) =>
+                item.categoria &&
+                item.categoria.toLowerCase().trim() !== "videos"
+            )
+          : [];
+
+        const adaptadas = soloFotos.map((item) => ({
           id: item.id,
           category: item.categoria,
           src: item.imageUrl,

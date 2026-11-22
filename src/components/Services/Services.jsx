@@ -1,62 +1,144 @@
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import SectionTitle from '../common/SectionTitle';
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import SectionTitle from "../common/SectionTitle";
+import { getVideoEmbedUrl } from "../../utils/videoUtils";
 import {
   containerStagger,
   cardVariants,
   fadeLeftVariants,
   fadeRightVariants,
   viewportConfig,
-  easeOutExpo,
-} from '../../utils/motionVariants';
-import './Services.css';
+  headerVariants,
+} from "../../utils/motionVariants";
+import "./Services.css";
 
 const generalServices = [
   {
-    icon: '🎬',
-    title: 'Video ',
+    icon: (
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.7"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className="service-card__svg"
+      >
+        <path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.934a.5.5 0 0 0-.777-.416L16 11" />
+        <rect x="2" y="6" width="14" height="12" rx="2" />
+      </svg>
+    ),
+    title: "Producción de Video",
     featured: false,
-    tag: 'Producción',
-    description: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Rerum consectetur recusandae voluptatum quae! Voluptates mollitia earum illo temporibus quis fugiat fuga, consequuntur, illum beatae facere exercitationem nisi harum voluptatibus at!"
+    tag: "Video & Edición",
+    description:
+      "Grabamos y editamos videos para redes sociales, publicidad y eventos. Cuidamos cada detalle de la imagen y el sonido para que tu mensaje conecte y destaque.",
   },
   {
-    icon: '📸',
-    title: 'Fotografía Profesional',
+    icon: (
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.7"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className="service-card__svg"
+      >
+        <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z" />
+        <circle cx="12" cy="13" r="3" />
+      </svg>
+    ),
+    title: "Fotografía Profesional",
     featured: false,
-    tag: 'Foto Estudio & Eventos',
-    description: 'Registro fotográfico nítido y expresivo. Edición y revelado digital minucioso para prensa, catálogos, memorias y redes.'
+    tag: "Sesiones & Eventos",
+    description:
+      "Fotografías nítidas y bien cuidadas para marcas, eventos o retratos personales. Nos enfocamos en tomas naturales con un retoque limpio de alta calidad.",
   },
   {
-    icon: '💍',
-    title: 'Bodas & Eventos Sociales',
+    icon: (
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.7"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className="service-card__svg"
+      >
+        <circle cx="9" cy="12" r="6" />
+        <circle cx="15" cy="12" r="6" />
+      </svg>
+    ),
+    title: "Bodas & Eventos Sociales",
     featured: false,
-    tag: 'Social',
-    description: 'Documentación emotiva y espontánea de tus momentos más significativos con discreción y un acabado estético perdurable.'
-  }
-];
-
-const corporateProjects = [
-  {
-    id: 1,
-    tag: 'SEGUTEK',
-    title: 'EMPRESA DONDE SE TRABAJOOO',
-    client: 'Evento Corporativo',
-    description: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Rerum consectetur recusandae voluptatum quae! Voluptates mollitia earum illo temporibus quis fugiat fuga, consequuntur, illum beatae facere exercitationem nisi harum',
-    deliverables: [
-      'Lorem ipsum dolor sit, amet consectetur adipisicing elit',
-      'Lorem ipsum dolor sit, amet consectetur adipisicing elit',
-      'Lorem ipsum dolor sit, amet consectetur adipisicing elit',
-      'Lorem ipsum dolor sit, amet consectetur adipisicing elit'
-    ],
-    // Puedes reemplazar esta URL por tu video local <video src="..." /> o enlace de YouTube
-    image: 'https://scontent-lim1-1.xx.fbcdn.net/v/t39.30808-6/555676807_24976448855319457_6176242583676901540_n.jpg?stp=dst-jpg_tt6&cstp=mx808x808&ctp=s808x808&_nc_cat=103&ccb=1-7&_nc_sid=0b6b33&_nc_ohc=M46Th2_-VbMQ7kNvwHN0yM3&_nc_oc=AdqVkvrGgK2lvvG8b-EsT9cC_zr7xajrJW058Y4o8VNS5Qau9DVydbaoiCELBSzti9o&_nc_zt=23&_nc_ht=scontent-lim1-1.xx&_nc_gid=SybY6oHdZkcV14xsPu7pdw&_nc_ss=7b2a8&oh=00_AQS_WxS0MPui6GWXSzxIuSUsAecPaaotxqg0pivIsw-dfA&oe=6AF17CF0',
-    videoLabel: 'Reel Corporativo 4K',
-    duration: '02:15 min'
-  }
+    tag: "Momentos Especiales",
+    description:
+      "Acompañamos tus fechas más importantes de inicio a fin. Registramos las emociones, risas y detalles espontáneos para que revivas ese día cuando quieras.",
+  },
 ];
 
 const Services = () => {
-  const [activeProject, setActiveProject] = useState(corporateProjects[0]);
+  const [projects, setProjects] = useState([]);
+  const [activeProject, setActiveProject] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Cargar proyectos de video y casos corporativos dinámicos desde el backend
+  useEffect(() => {
+    const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8080/api";
+
+    fetch(`${API_URL}/public/galeria/videos`)
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("No se pudo obtener la lista de videos");
+        }
+        return res.json();
+      })
+      .then((data) => {
+        const videoItems = Array.isArray(data) ? data : [];
+        if (videoItems.length > 0) {
+          const mapped = videoItems.map((item) => ({
+            id: item.id,
+            tag: item.empresa || item.titulo || "PROYECTO",
+            title: item.titulo || "Evento Corporativo",
+            client: item.empresa
+              ? `Evento Corporativo • ${item.empresa}`
+              : "Evento Corporativo",
+            description: item.descripcion || "- Producción JudeFilms",
+            image:
+              item.imageUrl || item.clienteAvatarUrl || "/client-avatar.jpg",
+            videoUrl: item.videoUrl || "",
+            duration: "4K UHD",
+            testimonial:
+              item.clienteNombre || item.clienteComentario
+                ? {
+                    clientName: item.clienteNombre || "Cliente JudeFilms",
+                    clientRole: item.clienteCargo || "Director General",
+                    clientCompany: item.empresa || "",
+                    clientImage:
+                      item.clienteAvatarUrl ||
+                      item.imageUrl ||
+                      "/client-avatar.jpg",
+                    quote: item.clienteComentario || "",
+                  }
+                : null,
+          }));
+          setProjects(mapped);
+          setActiveProject(mapped[0]);
+        } else {
+          setProjects([]);
+          setActiveProject(null);
+        }
+      })
+      .catch((err) => {
+        console.error("Error al cargar casos corporativos:", err);
+        setProjects([]);
+        setActiveProject(null);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }, []);
 
   return (
     <section id="services" className="services">
@@ -79,125 +161,194 @@ const Services = () => {
             Producción Audiovisual para Eventos Corporativos
           </h3>
           <p className="corporate-showcase__subheading">
-            Convertimos las convenciones, galas y conferencias de tu empresa en piezas visuales de alta gama que comunican liderazgo y prestigio.
+            Convertimos las convenciones, galas y conferencias de tu empresa en
+            piezas visuales de alta gama que comunican liderazgo y prestigio.
           </p>
 
-          {/* Selector de Casos de Éxito Corporativos */}
-          <div className="corporate-showcase__tabs">
-            {corporateProjects.map((project) => (
-              <button
-                key={project.id}
-                type="button"
-                className={`corporate-showcase__tab-btn ${
-                  activeProject.id === project.id ? 'active' : ''
-                }`}
-                onClick={() => setActiveProject(project)}
-              >
-                {project.tag}
-              </button>
-            ))}
-          </div>
+          {/* Selector de Casos de Éxito Corporativos (solo si hay proyectos) */}
+          {projects.length > 0 && (
+            <div className="corporate-showcase__tabs">
+              {projects.map((project) => (
+                <motion.button
+                  key={project.id}
+                  type="button"
+                  className={`corporate-showcase__tab-btn ${
+                    activeProject?.id === project.id ? "active" : ""
+                  }`}
+                  onClick={() => setActiveProject(project)}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  {project.tag}
+                </motion.button>
+              ))}
+            </div>
+          )}
         </motion.div>
 
         {/* Contenedor Video a la Izquierda + Descripción a la Derecha */}
-        <div className="corporate-showcase__body">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={activeProject.id}
-              className="corporate-showcase__grid"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.4, ease: easeOutExpo }}
-            >
-              {/* LADO IZQUIERDO: Video / Media Player Mockup */}
+        {projects.length > 0 && activeProject ? (
+          <div className="corporate-showcase__body">
+            <AnimatePresence mode="wait">
               <motion.div
-                className="corporate-showcase__media-wrapper"
-                variants={fadeLeftVariants}
+                key={activeProject.id}
+                className="corporate-showcase__grid"
+                initial="hidden"
+                whileInView="visible"
+                viewport={viewportConfig}
+                variants={containerStagger}
+                exit={{ opacity: 0, y: -15, transition: { duration: 0.25 } }}
               >
-                <div className="corporate-showcase__media-frame">
-                  {/* Imagen generada/placeholder (lista para ser reemplazada por tu etiqueta <video>) */}
-                  <img
-                    src={activeProject.image}
-                    alt={activeProject.title}
-                    className="corporate-showcase__media-img"
-                    loading="lazy"
-                  />
-
-                  {/* NOTA PARA EL USUARIO:
-                      Para usar tu propio video, puedes reemplazar la etiqueta <img> de arriba por:
-                      <video 
-                        src="/tu-video.mp4" 
-                        controls 
-                        className="corporate-showcase__video"
-                        poster={activeProject.image}
-                      />
-                  */}
-
-                  {/* Overlay Cinematográfico con Botón Play y Badges */}
-                  <div className="corporate-showcase__media-overlay">
-                    <div className="corporate-showcase__play-btn-wrapper">
-                      <div className="corporate-showcase__play-btn" aria-label="Reproducir reel">
-                        <svg viewBox="0 0 24 24" fill="currentColor" className="corporate-showcase__play-icon">
-                          <path d="M8 5v14l11-7z" />
-                        </svg>
+                {/* LADO IZQUIERDO: Video / Media Player Mockup con animación de entrada */}
+                <motion.div
+                  className="corporate-showcase__media-wrapper"
+                  variants={fadeLeftVariants}
+                >
+                  <div className="corporate-showcase__media-frame">
+                    {activeProject?.videoUrl ? (
+                      <div className="corporate-showcase__video-embed-container">
+                        <iframe
+                          src={getVideoEmbedUrl(activeProject.videoUrl)}
+                          title={activeProject.title || "Video corporativo"}
+                          className="corporate-showcase__video-iframe"
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+                          allowFullScreen
+                        />
                       </div>
-                      <span className="corporate-showcase__play-text">Reel de Demostración</span>
-                    </div>
-
-                    <div className="corporate-showcase__media-meta">
-                      <span className="corporate-showcase__media-quality">4K UHD</span>
-                      <span className="corporate-showcase__media-duration">{activeProject.duration}</span>
-                    </div>
+                    ) : (
+                      <div className="corporate-showcase__media-placeholder">
+                        <svg
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="1.5"
+                          className="corporate-showcase__placeholder-icon"
+                        >
+                          <polygon points="23 7 16 12 23 17 23 7" />
+                          <rect x="1" y="5" width="15" height="14" rx="2" ry="2" />
+                        </svg>
+                        <span>Video no disponible</span>
+                      </div>
+                    )}
                   </div>
-                </div>
+                </motion.div>
 
-                <p className="corporate-showcase__media-caption">
-                  ▲ Vista previa de producción corporativa realizada por <strong>JudeFilms</strong>
-                </p>
+                {/* LADO DERECHO: Ficha Técnica y Descripción con textos animados en cascada */}
+                <motion.div
+                  className="corporate-showcase__info"
+                  variants={fadeRightVariants}
+                >
+                  <motion.div
+                    className="corporate-showcase__client-tag"
+                    variants={cardVariants}
+                  >
+                    {activeProject.client}
+                  </motion.div>
+
+                  <motion.h4
+                    className="corporate-showcase__title"
+                    variants={cardVariants}
+                  >
+                    {activeProject.title}
+                  </motion.h4>
+
+                  <motion.p
+                    className="corporate-showcase__desc"
+                    variants={cardVariants}
+                  >
+                    {activeProject.description}
+                  </motion.p>
+
+                  {/* ── Testimonial del Cliente con animación de entrada ── */}
+                  {activeProject.testimonial && (
+                    <motion.div
+                      className="corporate-showcase__testimonial"
+                      variants={cardVariants}
+                      whileHover={{ y: -3 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <div className="corporate-showcase__testimonial-top">
+                        {/* Imagen del cliente en círculo */}
+                        <motion.div
+                          className="corporate-showcase__testimonial-avatar-wrapper"
+                          initial={{ scale: 0.85, opacity: 0 }}
+                          animate={{ scale: 1, opacity: 1 }}
+                          transition={{ duration: 0.5, delay: 0.15 }}
+                        >
+                          <img
+                            src={activeProject.testimonial.clientImage}
+                            alt={activeProject.testimonial.clientName}
+                            className="corporate-showcase__testimonial-avatar"
+                            loading="lazy"
+                          />
+                        </motion.div>
+
+                        {/* Nombre y Cargo con la barra de acento vertical */}
+                        <div className="corporate-showcase__testimonial-author">
+                          <div className="corporate-showcase__testimonial-bar" />
+                          <div className="corporate-showcase__testimonial-info">
+                            <h5 className="corporate-showcase__testimonial-name">
+                              {activeProject.testimonial.clientName}
+                            </h5>
+                            <p className="corporate-showcase__testimonial-role">
+                              {activeProject.testimonial.clientRole}
+                              {activeProject.testimonial.clientCompany && (
+                                <span className="corporate-showcase__testimonial-company">
+                                  {", "}
+                                  {activeProject.testimonial.clientCompany}
+                                </span>
+                              )}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Mensaje testimonial con comillas estilizadas */}
+                      <div className="corporate-showcase__testimonial-quote-box">
+                        <span
+                          className="corporate-showcase__quote-mark corporate-showcase__quote-mark--start"
+                          aria-hidden="true"
+                        >
+                          “
+                        </span>
+                        <p className="corporate-showcase__testimonial-quote">
+                          {activeProject.testimonial.quote}
+                        </p>
+                        <span
+                          className="corporate-showcase__quote-mark corporate-showcase__quote-mark--end"
+                          aria-hidden="true"
+                        >
+                          ”
+                        </span>
+                      </div>
+                    </motion.div>
+                  )}
+                </motion.div>
               </motion.div>
-
-              {/* LADO DERECHO: Ficha Técnica y Descripción de lo que se hizo */}
-              <motion.div
-                className="corporate-showcase__info"
-                variants={fadeRightVariants}
-              >
-                <div className="corporate-showcase__client-tag">
-                  {activeProject.client}
-                </div>
-                <h4 className="corporate-showcase__title">
-                  {activeProject.title}
-                </h4>
-
-                <p className="corporate-showcase__desc">
-                  {activeProject.description}
-                </p>
-
-                <div className="corporate-showcase__features">
-                  <span className="corporate-showcase__features-label">
-                    LO QUE INCLUYÓ ESTE PROYECTO:
-                  </span>
-                  <ul className="corporate-showcase__features-list">
-                    {activeProject.deliverables.map((item, idx) => (
-                      <li key={idx} className="corporate-showcase__features-item">
-                        <span className="corporate-showcase__check-icon">✓</span>
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </motion.div>
-            </motion.div>
-          </AnimatePresence>
-        </div>
+            </AnimatePresence>
+          </div>
+        ) : !isLoading && projects.length === 0 ? (
+          <div className="corporate-showcase__empty">
+            <p>Próximamente más proyectos corporativos destacados.</p>
+          </div>
+        ) : null}
       </div>
 
       {/* ── CUADRÍCULA DE SERVICIOS GENERALES ── */}
       <div className="services__general-section">
-        <div className="services__general-header">
+        <motion.div
+          className="services__general-header"
+          initial="hidden"
+          whileInView="visible"
+          viewport={viewportConfig}
+          variants={headerVariants}
+        >
           <span className="services__general-badge">PORTAFOLIO INTEGRAL</span>
-          <h4 className="services__general-title">Otros Servicios Disponibles</h4>
-        </div>
+          <h4 className="services__general-title">
+            Otros Servicios Disponibles
+          </h4>
+        </motion.div>
 
         <motion.div
           className="services__grid"
@@ -208,12 +359,20 @@ const Services = () => {
         >
           {generalServices.map((service, index) => (
             <motion.div
-              className={`service-card ${service.featured ? 'service-card--featured' : ''}`}
+              className={`service-card ${service.featured ? "service-card--featured" : ""}`}
               key={index}
               variants={cardVariants}
+              whileHover={{ y: -6 }}
+              transition={{ type: "spring", stiffness: 350, damping: 25 }}
             >
               <div className="service-card__top">
-                <span className="service-card__icon">{service.icon}</span>
+                <motion.span
+                  className="service-card__icon"
+                  whileHover={{ scale: 1.15, rotate: 6 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  {service.icon}
+                </motion.span>
                 {service.featured && (
                   <span className="service-card__tag">{service.tag}</span>
                 )}

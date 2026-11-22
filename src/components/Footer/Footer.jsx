@@ -20,7 +20,7 @@ const Footer = () => {
   const socialLinks = [
     { label: 'Instagram', href: 'https://www.instagram.com/judefilmsfotoyvideo/' },
     { label: 'Facebook', href: 'https://www.facebook.com/judefilms' },
-    { label: 'WhatsApp', href: 'https://wa.me/903277681?text=Texto' },
+    { label: 'WhatsApp', href: 'https://wa.me/51903277681?text=Hola%20JudeFilms%2C%20quisiera%20m%C3%A1s%20informaci%C3%B3n' },
   ];
 
   return (

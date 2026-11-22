@@ -1,17 +1,17 @@
-import { motion } from 'framer-motion';
+import { motion } from "framer-motion";
 import {
   easeOutExpo,
   viewportConfig,
   containerStagger,
-} from '../../utils/motionVariants';
-import './Hero.css';
+} from "../../utils/motionVariants";
+import "./Hero.css";
 
 const heroItemVariants = {
-  hidden: { opacity: 0, y: 30, filter: 'blur(6px)' },
+  hidden: { opacity: 0, y: 30, filter: "blur(6px)" },
   visible: {
     opacity: 1,
     y: 0,
-    filter: 'blur(0px)',
+    filter: "blur(0px)",
     transition: { duration: 0.7, ease: easeOutExpo },
   },
 };
@@ -39,7 +39,7 @@ const Hero = () => {
         </motion.p>
 
         <motion.p className="hero__disciplines" variants={heroItemVariants}>
-          Foto • Video • Eventos
+          Foto • Video
         </motion.p>
 
         <motion.div className="hero__cta-wrapper" variants={heroItemVariants}>
@@ -58,8 +58,7 @@ const Hero = () => {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={viewportConfig}
         transition={{ delay: 0.5, duration: 0.6 }}
-      >
-      </motion.a>
+      ></motion.a>
     </section>
   );
 };
