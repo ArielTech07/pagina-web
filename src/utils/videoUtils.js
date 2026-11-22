@@ -15,7 +15,10 @@ export const getVideoEmbedUrl = (url) => {
   // 2. YouTube (watch?v=ID, youtu.be/ID, embed/ID, shorts/ID)
   const ytMatch = cleanUrl.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/|v\/))([a-zA-Z0-9_-]+)/);
   if (ytMatch && ytMatch[1]) {
-    return `https://www.youtube.com/embed/${ytMatch[1]}?autoplay=0&rel=0`;
+    // Parámetros al máximo para limpiar YouTube:
+    // modestbranding=1 (reduce logo), rel=0 (sin sugerencias externas), iv_load_policy=3 (sin anotaciones),
+    // controls=1 (o controls=0 si prefieres sin barra inferior), disablekb=1 (sin accesos), fs=1 (pantalla completa opcional)
+    return `https://www.youtube-nocookie.com/embed/${ytMatch[1]}?modestbranding=1&rel=0&iv_load_policy=3&playsinline=1&controls=0`;
   }
 
   // 3. Vimeo (vimeo.com/ID)
