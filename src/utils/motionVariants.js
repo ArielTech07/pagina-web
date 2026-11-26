@@ -14,12 +14,13 @@ export const containerStagger = {
   },
 };
 
-// En móvil configuramos `once: true` de forma estricta para evitar que el cambio de tamaño
-// de la barra de direcciones de Safari/iOS vuelva a disparar las animaciones de scroll
+// En móvil configuramos `once: true` para evitar que la barra de Safari/Chrome iOS
+// re-dispare las animaciones, pero en PC/Desktop se mantiene `once: false`
+// para que las animaciones de ida y vuelta sigan funcionando fluidamente al subir y bajar
 export const viewportConfig = {
-  once: true,
+  once: isMobile,
   amount: 0.15,
-  margin: '0px',
+  margin: '-20px',
 };
 
 export const headerVariants = {
