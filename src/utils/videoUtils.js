@@ -21,12 +21,7 @@ export const getVideoEmbedUrl = (url) => {
     return `https://www.youtube-nocookie.com/embed/${ytMatch[1]}?modestbranding=1&rel=0&iv_load_policy=3&playsinline=1&controls=0`;
   }
 
-  // 3. Vimeo (vimeo.com/ID)
-  const vimeoMatch = cleanUrl.match(/vimeo\.com\/(?:video\/)?([0-9]+)/);
-  if (vimeoMatch && vimeoMatch[1]) {
-    return `https://player.vimeo.com/video/${vimeoMatch[1]}`;
-  }
+  
 
-  // Si ya tiene /preview o es otro embed
   return cleanUrl;
 };

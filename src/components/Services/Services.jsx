@@ -1,12 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import SectionTitle from "../common/SectionTitle";
 import { getVideoEmbedUrl } from "../../utils/videoUtils";
 import {
   containerStagger,
   cardVariants,
-  fadeLeftVariants,
-  fadeRightVariants,
+  easeOutExpo,
   viewportConfig,
   headerVariants,
 } from "../../utils/motionVariants";
@@ -78,10 +77,88 @@ const generalServices = [
   },
 ];
 
+const carouselSlideVariants = {
+  enter: (direction) => ({
+    x: direction > 0 ? 70 : direction < 0 ? -70 : 0,
+    opacity: 0,
+    scale: 0.985,
+  }),
+  center: {
+    x: 0,
+    opacity: 1,
+    scale: 1,
+    transition: {
+      duration: 0.45,
+      ease: easeOutExpo,
+      staggerChildren: 0.06,
+    },
+  },
+  exit: (direction) => ({
+    x: direction > 0 ? -70 : direction < 0 ? 70 : 0,
+    opacity: 0,
+    scale: 0.985,
+    transition: {
+      duration: 0.28,
+      ease: easeOutExpo,
+    },
+  }),
+};
+
+const slideItemVariants = {
+  enter: { opacity: 0, y: 14 },
+  center: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.4, ease: easeOutExpo },
+  },
+  exit: {
+    opacity: 0,
+    transition: { duration: 0.2 },
+  },
+};
+
 const Services = () => {
   const [projects, setProjects] = useState([]);
-  const [activeProject, setActiveProject] = useState(null);
+  const [[activeIndex, direction], setSlideState] = useState([0, 0]);
   const [isLoading, setIsLoading] = useState(true);
+
+  const activeProject = projects[activeIndex] || null;
+
+  const paginate = useCallback(
+    (newDirection) => {
+      if (projects.length <= 1) return;
+      setSlideState(([prevIndex]) => {
+        const nextIndex =
+          (prevIndex + newDirection + projects.length) % projects.length;
+        return [nextIndex, newDirection];
+      });
+    },
+    [projects.length],
+  );
+
+  const goToIndex = useCallback(
+    (targetIndex) => {
+      setSlideState(([prevIndex]) => {
+        if (targetIndex === prevIndex) return [prevIndex, 0];
+        const newDirection = targetIndex > prevIndex ? 1 : -1;
+        return [targetIndex, newDirection];
+      });
+    },
+    [],
+  );
+
+  const handleDragEnd = useCallback(
+    (_event, info) => {
+      if (projects.length <= 1) return;
+      const { offset, velocity } = info;
+      if (offset.x < -50 || velocity.x < -320) {
+        paginate(1);
+      } else if (offset.x > 50 || velocity.x > 320) {
+        paginate(-1);
+      }
+    },
+    [projects.length, paginate],
+  );
 
   // Cargar proyectos de video y casos corporativos dinámicos desde el backend
   useEffect(() => {
@@ -124,16 +201,16 @@ const Services = () => {
                 : null,
           }));
           setProjects(mapped);
-          setActiveProject(mapped[0]);
+          setSlideState([0, 0]);
         } else {
           setProjects([]);
-          setActiveProject(null);
+          setSlideState([0, 0]);
         }
       })
       .catch((err) => {
         console.error("Error al cargar casos corporativos:", err);
         setProjects([]);
-        setActiveProject(null);
+        setSlideState([0, 0]);
       })
       .finally(() => {
         setIsLoading(false);
@@ -168,14 +245,14 @@ const Services = () => {
           {/* Selector de Casos de Éxito Corporativos (solo si hay proyectos) */}
           {projects.length > 0 && (
             <div className="corporate-showcase__tabs">
-              {projects.map((project) => (
+              {projects.map((project, idx) => (
                 <motion.button
                   key={project.id}
                   type="button"
                   className={`corporate-showcase__tab-btn ${
-                    activeProject?.id === project.id ? "active" : ""
+                    activeIndex === idx ? "active" : ""
                   }`}
-                  onClick={() => setActiveProject(project)}
+                  onClick={() => goToIndex(idx)}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   transition={{ duration: 0.2 }}
@@ -187,147 +264,250 @@ const Services = () => {
           )}
         </motion.div>
 
-        {/* Contenedor Video a la Izquierda + Descripción a la Derecha */}
+        {/* Galería Desplazable: Video + Información con Flechas y Swipe Táctil */}
         {projects.length > 0 && activeProject ? (
-          <div className="corporate-showcase__body">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={activeProject.id}
-                className="corporate-showcase__grid"
-                initial="hidden"
-                whileInView="visible"
-                viewport={viewportConfig}
-                variants={containerStagger}
-                exit={{ opacity: 0, y: -15, transition: { duration: 0.25 } }}
-              >
-                {/* LADO IZQUIERDO: Video / Media Player Mockup con animación de entrada */}
-                <motion.div
-                  className="corporate-showcase__media-wrapper"
-                  variants={fadeLeftVariants}
-                >
-                  <div className="corporate-showcase__media-frame">
-                    {activeProject?.videoUrl ? (
-                      <div className="corporate-showcase__video-embed-container">
-                        <iframe
-                          src={getVideoEmbedUrl(activeProject.videoUrl)}
-                          title={activeProject.title || "Video corporativo"}
-                          className="corporate-showcase__video-iframe"
-                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
-                          allowFullScreen
-                        />
-                      </div>
-                    ) : (
-                      <div className="corporate-showcase__media-placeholder">
-                        <svg
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="1.5"
-                          className="corporate-showcase__placeholder-icon"
-                        >
-                          <polygon points="23 7 16 12 23 17 23 7" />
-                          <rect x="1" y="5" width="15" height="14" rx="2" ry="2" />
-                        </svg>
-                        <span>Video no disponible</span>
-                      </div>
-                    )}
-                  </div>
-                </motion.div>
-
-                {/* LADO DERECHO: Ficha Técnica y Descripción con textos animados en cascada */}
-                <motion.div
-                  className="corporate-showcase__info"
-                  variants={fadeRightVariants}
-                >
-                  <motion.div
-                    className="corporate-showcase__client-tag"
-                    variants={cardVariants}
+          <motion.div
+            className="corporate-showcase__carousel"
+            initial="hidden"
+            whileInView="visible"
+            viewport={viewportConfig}
+            variants={cardVariants}
+          >
+            <div className="corporate-showcase__stage">
+              {projects.length > 1 && (
+                <>
+                  <motion.button
+                    type="button"
+                    className="corporate-showcase__arrow corporate-showcase__arrow--prev"
+                    onClick={() => paginate(-1)}
+                    aria-label="Evento anterior"
+                    whileHover={{ scale: 1.08 }}
+                    whileTap={{ scale: 0.92 }}
                   >
-                    {activeProject.client}
-                  </motion.div>
-
-                  <motion.h4
-                    className="corporate-showcase__title"
-                    variants={cardVariants}
-                  >
-                    {activeProject.title}
-                  </motion.h4>
-
-                  <motion.p
-                    className="corporate-showcase__desc"
-                    variants={cardVariants}
-                  >
-                    {activeProject.description}
-                  </motion.p>
-
-                  {/* ── Testimonial del Cliente con animación de entrada ── */}
-                  {activeProject.testimonial && (
-                    <motion.div
-                      className="corporate-showcase__testimonial"
-                      variants={cardVariants}
-                      whileHover={{ y: -3 }}
-                      transition={{ duration: 0.3 }}
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      aria-hidden="true"
                     >
-                      <div className="corporate-showcase__testimonial-top">
-                        {/* Imagen del cliente en círculo */}
-                        <motion.div
-                          className="corporate-showcase__testimonial-avatar-wrapper"
-                          initial={{ scale: 0.85, opacity: 0 }}
-                          animate={{ scale: 1, opacity: 1 }}
-                          transition={{ duration: 0.5, delay: 0.15 }}
-                        >
-                          <img
-                            src={activeProject.testimonial.clientImage}
-                            alt={activeProject.testimonial.clientName}
-                            className="corporate-showcase__testimonial-avatar"
-                            loading="lazy"
-                          />
-                        </motion.div>
+                      <polyline points="15 18 9 12 15 6" />
+                    </svg>
+                  </motion.button>
 
-                        {/* Nombre y Cargo con la barra de acento vertical */}
-                        <div className="corporate-showcase__testimonial-author">
-                          <div className="corporate-showcase__testimonial-bar" />
-                          <div className="corporate-showcase__testimonial-info">
-                            <h5 className="corporate-showcase__testimonial-name">
-                              {activeProject.testimonial.clientName}
-                            </h5>
-                            <p className="corporate-showcase__testimonial-role">
-                              {activeProject.testimonial.clientRole}
-                              {activeProject.testimonial.clientCompany && (
-                                <span className="corporate-showcase__testimonial-company">
-                                  {", "}
-                                  {activeProject.testimonial.clientCompany}
-                                </span>
-                              )}
-                            </p>
+                  <motion.button
+                    type="button"
+                    className="corporate-showcase__arrow corporate-showcase__arrow--next"
+                    onClick={() => paginate(1)}
+                    aria-label="Siguiente evento"
+                    whileHover={{ scale: 1.08 }}
+                    whileTap={{ scale: 0.92 }}
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      aria-hidden="true"
+                    >
+                      <polyline points="9 18 15 12 9 6" />
+                    </svg>
+                  </motion.button>
+                </>
+              )}
+
+              <div className="corporate-showcase__viewport">
+                <AnimatePresence mode="wait" custom={direction} initial={false}>
+                  <motion.div
+                    key={activeProject.id}
+                    className={`corporate-showcase__grid ${
+                      projects.length > 1 ? "is-draggable" : ""
+                    }`}
+                    custom={direction}
+                    variants={carouselSlideVariants}
+                    initial="enter"
+                    animate="center"
+                    exit="exit"
+                    drag={projects.length > 1 ? "x" : false}
+                    dragConstraints={{ left: 0, right: 0 }}
+                    dragElastic={0.2}
+                    dragDirectionLock
+                    dragMomentum={false}
+                    onDragEnd={handleDragEnd}
+                    style={{ touchAction: "pan-y" }}
+                  >
+                    {/* LADO IZQUIERDO / PRINCIPAL EN MÓVIL: Video Player */}
+                    <motion.div
+                      className="corporate-showcase__media-wrapper"
+                      variants={slideItemVariants}
+                    >
+                      <div className="corporate-showcase__media-frame">
+                        {activeProject?.videoUrl ? (
+                          <div className="corporate-showcase__video-embed-container">
+                            <iframe
+                              src={getVideoEmbedUrl(activeProject.videoUrl)}
+                              title={activeProject.title || "Video corporativo"}
+                              className="corporate-showcase__video-iframe"
+                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+                              allowFullScreen
+                            />
                           </div>
-                        </div>
-                      </div>
-
-                      {/* Mensaje testimonial con comillas estilizadas */}
-                      <div className="corporate-showcase__testimonial-quote-box">
-                        <span
-                          className="corporate-showcase__quote-mark corporate-showcase__quote-mark--start"
-                          aria-hidden="true"
-                        >
-                          “
-                        </span>
-                        <p className="corporate-showcase__testimonial-quote">
-                          {activeProject.testimonial.quote}
-                        </p>
-                        <span
-                          className="corporate-showcase__quote-mark corporate-showcase__quote-mark--end"
-                          aria-hidden="true"
-                        >
-                          ”
-                        </span>
+                        ) : (
+                          <div className="corporate-showcase__media-placeholder">
+                            <svg
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="1.5"
+                              className="corporate-showcase__placeholder-icon"
+                            >
+                              <polygon points="23 7 16 12 23 17 23 7" />
+                              <rect
+                                x="1"
+                                y="5"
+                                width="15"
+                                height="14"
+                                rx="2"
+                                ry="2"
+                              />
+                            </svg>
+                            <span>Video no disponible</span>
+                          </div>
+                        )}
                       </div>
                     </motion.div>
-                  )}
-                </motion.div>
-              </motion.div>
-            </AnimatePresence>
-          </div>
+
+                    {/* LADO DERECHO: Ficha Técnica y Descripción */}
+                    <motion.div
+                      className="corporate-showcase__info"
+                      variants={slideItemVariants}
+                    >
+                      <motion.div
+                        className="corporate-showcase__client-tag"
+                        variants={slideItemVariants}
+                      >
+                        {activeProject.client}
+                      </motion.div>
+
+                      <motion.h4
+                        className="corporate-showcase__title"
+                        variants={slideItemVariants}
+                      >
+                        {activeProject.title}
+                      </motion.h4>
+
+                      <motion.p
+                        className="corporate-showcase__desc"
+                        variants={slideItemVariants}
+                      >
+                        {activeProject.description}
+                      </motion.p>
+
+                      {/* ── Testimonial del Cliente ── */}
+                      {activeProject.testimonial && (
+                        <motion.div
+                          className="corporate-showcase__testimonial"
+                          variants={slideItemVariants}
+                          whileHover={{ y: -3 }}
+                          transition={{ duration: 0.3 }}
+                        >
+                          <div className="corporate-showcase__testimonial-top">
+                            {/* Imagen del cliente en círculo */}
+                            <motion.div
+                              className="corporate-showcase__testimonial-avatar-wrapper"
+                              initial={{ scale: 0.85, opacity: 0 }}
+                              animate={{ scale: 1, opacity: 1 }}
+                              transition={{ duration: 0.45, delay: 0.1 }}
+                            >
+                              <img
+                                src={activeProject.testimonial.clientImage}
+                                alt={activeProject.testimonial.clientName}
+                                className="corporate-showcase__testimonial-avatar"
+                                loading="lazy"
+                              />
+                            </motion.div>
+
+                            {/* Nombre y Cargo con la barra de acento vertical */}
+                            <div className="corporate-showcase__testimonial-author">
+                              <div className="corporate-showcase__testimonial-bar" />
+                              <div className="corporate-showcase__testimonial-info">
+                                <h5 className="corporate-showcase__testimonial-name">
+                                  {activeProject.testimonial.clientName}
+                                </h5>
+                                <p className="corporate-showcase__testimonial-role">
+                                  {activeProject.testimonial.clientRole}
+                                  {activeProject.testimonial.clientCompany && (
+                                    <span className="corporate-showcase__testimonial-company">
+                                      {", "}
+                                      {activeProject.testimonial.clientCompany}
+                                    </span>
+                                  )}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Mensaje testimonial con comillas estilizadas */}
+                          <div className="corporate-showcase__testimonial-quote-box">
+                            <span
+                              className="corporate-showcase__quote-mark corporate-showcase__quote-mark--start"
+                              aria-hidden="true"
+                            >
+                              “
+                            </span>
+                            <p className="corporate-showcase__testimonial-quote">
+                              {activeProject.testimonial.quote}
+                            </p>
+                            <span
+                              className="corporate-showcase__quote-mark corporate-showcase__quote-mark--end"
+                              aria-hidden="true"
+                            >
+                              ”
+                            </span>
+                          </div>
+                        </motion.div>
+                      )}
+                    </motion.div>
+                  </motion.div>
+                </AnimatePresence>
+              </div>
+            </div>
+
+            {/* Indicadores inferiores (Puntos + Contador + Hint de swipe móvil) */}
+            {projects.length > 1 && (
+              <div className="corporate-showcase__controls">
+                <div className="corporate-showcase__pagination">
+                  <div className="corporate-showcase__dots">
+                    {projects.map((project, idx) => (
+                      <button
+                        key={project.id}
+                        type="button"
+                        className={`corporate-showcase__dot ${
+                          activeIndex === idx ? "active" : ""
+                        }`}
+                        onClick={() => goToIndex(idx)}
+                        aria-label={`Ir al evento ${idx + 1}: ${project.tag}`}
+                        aria-current={activeIndex === idx ? "true" : undefined}
+                      />
+                    ))}
+                  </div>
+                  <span className="corporate-showcase__counter">
+                    {activeIndex + 1} / {projects.length}
+                  </span>
+                </div>
+              </div>
+            )}
+
+            {projects.length > 1 && (
+              <p className="corporate-showcase__swipe-hint" aria-hidden="true">
+                Desliza o usa las flechas para explorar más eventos
+              </p>
+            )}
+          </motion.div>
         ) : !isLoading && projects.length === 0 ? (
           <div className="corporate-showcase__empty">
             <p>Próximamente más proyectos corporativos destacados.</p>
