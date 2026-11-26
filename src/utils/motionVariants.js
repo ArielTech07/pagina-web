@@ -1,7 +1,9 @@
 export const easeOutExpo = [0.16, 1, 0.3, 1];
 
-// Detección segura de móvil
-const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
+// Detección segura de móvil y soporte táctil
+const isMobile =
+  typeof window !== 'undefined' &&
+  (window.innerWidth <= 768 || ('ontouchstart' in window) || navigator.maxTouchPoints > 0);
 
 export const containerStagger = {
   hidden: {},
@@ -12,10 +14,12 @@ export const containerStagger = {
   },
 };
 
+// En móvil configuramos `once: true` de forma estricta para evitar que el cambio de tamaño
+// de la barra de direcciones de Safari/iOS vuelva a disparar las animaciones de scroll
 export const viewportConfig = {
-  once: isMobile,
+  once: true,
   amount: 0.15,
-  margin: '-20px',
+  margin: '0px',
 };
 
 export const headerVariants = {
